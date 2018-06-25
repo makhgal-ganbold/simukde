@@ -1,0 +1,14 @@
+Package: simukde
+Type: Package
+Title: Simulation with Kernel Density Estimation
+Version: 1.0.0
+Date: 2018-06-23
+Author: MAKHGAL Ganbold
+Maintainer: MAKHGAL Ganbold <makhgal@seas.num.edu.mn>
+Description: Generates random values from a univariate and multivariate continuous distribution by using kernel density estimation based on a sample.
+Depends: R (>= 2.14.0)
+Imports: ks, mvtnorm, parallel, stats
+License: GPL
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
