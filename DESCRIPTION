@@ -6,6 +6,8 @@ Date: 2018-06-23
 Author: MAKHGAL Ganbold
 Maintainer: MAKHGAL Ganbold <makhgal@seas.num.edu.mn>
 Description: Generates random values from a univariate and multivariate continuous distribution by using kernel density estimation based on a sample.
+URL: https://github.com/galaamn/simukde
+BugReports: https://github.com/galaamn/simukde/issues
 Depends: R (>= 2.14.0)
 Imports: ks, mvtnorm, parallel, stats
 License: GPL
