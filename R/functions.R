@@ -44,29 +44,15 @@ get_inst_distr <- function (dname) {
 #'
 #' @description Returns the constant of the Accept-Reject method for a given kernel density estimation, an instrumental or candidate density and its parameters.
 #'
-#' @param kd kernel density estimation, a value of the function \code{\link[ks]{kde}}.
+#' @param estimated.values kernel density estimation.
+#' @param eval.points evaluated points by using KDE.
 #' @param ddistr function, an instrumental or candidate distribution density function from \code{\link{get_inst_distr}}.
+#' @param params instrumental or candidate distribution parameters.
 #' @return numeric, the constant of the Accept-Reject method.
 #'
 #' @noRd
 
-est_const <- function (kd, ddistr, params) {
-
-  ## kernel density estimation (KDE)
-
-  if (class(kd) != "kde") {
-    stop("kd is invlalid")
-  }
-
-  ## instrumental or candidate distribution
-
-  if (class(ddistr) != "function") {
-    stop("distr is invlalid")
-  }
-
-  ## evaluated points by using KDE
-
-  eval.points <- as.matrix(expand.grid(kd$eval.points))
+est_const <- function (estimated.values, eval.points, ddistr, params) {
 
   ## instrumental or candidate distribution density
 
@@ -74,7 +60,7 @@ est_const <- function (kd, ddistr, params) {
 
   ## constant of accept reject method
 
-  max(kd$estimate / density)
+  max(estimated.values / density)
 
 }
 
@@ -140,13 +126,15 @@ est_const <- function (kd, ddistr, params) {
 
 simulate_kde <- function (x, n = 100, distr = "norm", const.only = FALSE, seed = NULL, parallel = FALSE, ...) {
 
+  ## check sample size
+
+  if (n != as.integer(n) || n <= 0) {
+    stop("n is invalid.")
+  }
+
   ## kernel density estimation (KDE)
 
   kd <- ks::kde(x = x, ...)
-
-  ## evaluated points by using KDE
-
-  eval.points <- as.matrix(expand.grid(kd$eval.points))
 
   ## instrumental or candidate distribution
 
@@ -154,18 +142,25 @@ simulate_kde <- function (x, n = 100, distr = "norm", const.only = FALSE, seed =
     if (distr == "norm") { # multivariate normal distribution
       params <- list("mean" = colMeans(kd$x), "sigma" = stats::cov(kd$x))
       inst_distr <- get_inst_distr(dname = "mvnorm")
+      eval.points <- as.matrix(expand.grid(kd$eval.points))
+      estimated.values <- kd$estimate
     }
   } else if (is.vector(x)) {
     if (distr == "norm") { # normal distribution
       params <- list("mean" = mean(kd$x), "sd" = stats::sd(kd$x))
       inst_distr <- get_inst_distr(dname = "norm")
+      valid.points <- rep(x = TRUE, times = length(x = kd$eval.points))
     } else if (distr == "exp") { # exponential distribution
       params <- list("rate" = 1 / mean(kd$x))
       inst_distr <- get_inst_distr(dname = "exp")
+      valid.points <- which(kd$eval.points > 0)
     } else if (distr == "unif") { # uniform distribution
       params <- list("min" = min(kd$x), "max" = max(kd$x))
       inst_distr <- get_inst_distr(dname = "unif")
+      valid.points <- which(kd$eval.points > params$min & kd$eval.points < params$max)
     }
+    eval.points <- kd$eval.points[valid.points]
+    estimated.values <- kd$estimate[valid.points]
   } else {
     stop("x must be a vector, matrix or data frame.")
   }
@@ -175,7 +170,7 @@ simulate_kde <- function (x, n = 100, distr = "norm", const.only = FALSE, seed =
 
   ## constant of the Accept-Reject method
 
-  const <- est_const(kd = kd, ddistr = inst_distr$density, params)
+  const <- est_const(estimated.values = estimated.values, eval.points = eval.points, ddistr = inst_distr$density, params)
 
   if (const.only) {
     return(const)
@@ -188,7 +183,7 @@ simulate_kde <- function (x, n = 100, distr = "norm", const.only = FALSE, seed =
     if (!is.null(seed)) {
       parallel::clusterSetRNGStream(cl = cl, iseed = seed)
     }
-    y <- parallel::parSapplyLB(cl = cl, X = seq_len(n), FUN = function (i) {
+    y <- parallel::parSapply(cl = cl, X = seq_len(n), FUN = function (i) {
       while (TRUE) {
         u <- stats::runif(n = 1)
         y <- inst_distr$random(n = 1, params = params)
@@ -225,6 +220,14 @@ simulate_kde <- function (x, n = 100, distr = "norm", const.only = FALSE, seed =
     y <- t(y)
   }
 
-  list("x" = x, "random.values" = y, "kde" = kd, "distr" = distr, "const" = const)
+  list(
+    "x" = x,
+    "random.values" = y,
+    "kde" = kd,
+    "distr" = distr,
+    "const" = const,
+    "sample.size" = n,
+    "seed" = seed
+  )
 
 }
