@@ -5,34 +5,34 @@
 \title{Simulation with Kernel Density Estimation}
 \usage{
 simulate_kde(x, n = 100, distr = "norm", const.only = FALSE,
-  seed = NULL, parallel = TRUE, ...)
+  seed = NULL, parallel = FALSE, ...)
 }
 \arguments{
 \item{x}{a numeric vector, matrix or data frame; data.}
 
 \item{n}{integer; the number of random values will be generated.}
 
-\item{distr}{character; auxiliary distribution name. See details.}
+\item{distr}{character; instrumental or candidate distribution name. See details.}
 
-\item{const.only}{logical; if \code{TRUE}, the constant of Accept Reject Method will be returned.}
+\item{const.only}{logical; if \code{TRUE}, the constant of the Accept-Reject method will be returned.}
 
 \item{seed}{a single value, interpreted as an integer, or \code{NULL} (default).}
 
-\item{parallel}{logical; if \code{TRUE} (default) parallel generator will be worked.}
+\item{parallel}{logical; if \code{TRUE} parallel generator will be worked. \code{FALSE} is default.}
 
 \item{...}{other parameters for functions \code{\link[ks]{kde}}.}
 }
 \value{
-list of given data, simulated values, kernel density estimation and the constant of Accept Reject Method when \code{const.only} is \code{FALSE} (default).
+list of given data, simulated values, kernel density estimation and the constant of the Accept-Reject method when \code{const.only} is \code{FALSE} (default).
 }
 \description{
-Generates random values from a univariate and multivariate continuous distribution by using kernel density estimation based on a sample. The function uses Accept Reject Method.
+Generates random values from a univariate and multivariate continuous distribution by using kernel density estimation based on a sample. The function uses the Accept-Reject method.
 }
 \details{
 Such function uses the function \code{\link[ks]{kde}} as kernel density estimator.
 
-Accept Reject Method is used to simulate random variables.
-Following code named distributions can be used as a value of the argument \code{distr} and an auxiliary distribution of the simulation method.
+The Accept-Reject method is used to simulate random variables.
+Following code named distributions can be used as a value of the argument \code{distr} and an instrumental or candidate distribution of the simulation method.
 For univariate distributions:
 \describe{
 \item{norm}{normal distribution (default), \eqn{(-\infty,+\infty)}}
@@ -42,20 +42,32 @@ For univariate distributions:
 For multivariate distributions, "norm" (multivariate normal distribution) is used.
 }
 \examples{
-\dontrun{
-
 ## 1-dimensional data
 data(faithful)
 hist(faithful$eruptions)
-res <- simukde::simulate_kde(x = faithful$eruptions, n = 1000)
+res <- simukde::simulate_kde(x = faithful$eruptions, n = 100, parallel = FALSE)
 hist(res$random.values)
-
+\dontshow{
+## 2-dimensional data
+data(faithful)
+res <- simukde::simulate_kde(x = faithful, n = 1, parallel = FALSE)
+plot(res$kde, display = "filled.contour2")
+points(x = res$random.values, cex = 0.5, pch = 16, col = "blue")
+points(x = faithful, cex = 0.25, pch = 16, col = "gray")
+}
+\donttest{
 ## 2-dimensional data
 data(faithful)
 res <- simukde::simulate_kde(x = faithful, n = 100)
 plot(res$kde, display = "filled.contour2")
 points(x = res$random.values, cex = 0.25, pch = 16, col = "green")
 points(x = faithful, cex = 0.25, pch = 16, col = "black")
+}
+}
+\references{
+\itemize{
+ \item Tarn Duong (2018). ks: Kernel Smoothing. R package version 1.11.2. \url{https://CRAN.R-project.org/package=ks}
+ \item Christian P. Robert and George Casella (2010) Introducing Monte Carlo Methods with R. Springer. Pages 51-57.
 }
 }
 \seealso{

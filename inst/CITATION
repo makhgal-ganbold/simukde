@@ -1,0 +1,16 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(
+  bibtype = "Manual",
+  title = "{simukde}: Simulation with Kernel Density Estimation",
+  author = c(person("Makhgal", "Ganbold")),
+  year = year,
+  note = note,
+  url = "https://CRAN.R-project.org/package=simukde",
+  textVersion = paste0(
+    "Makhgal Ganbold (", year, "). ",
+    "simukde: Simulation with Kernel Density Estimation. ",
+    note, ". https://CRAN.R-project.org/package=simukde"),
+  header = "To cite package 'simukde' in publications use:"
+)
