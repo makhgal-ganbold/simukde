@@ -4,7 +4,8 @@
 \alias{find_best_fit}
 \title{Find Best Fitting Distribution}
 \usage{
-find_best_fit(x, positive = FALSE, plot = TRUE, legend.pos = "topright")
+find_best_fit(x, positive = FALSE, plot = TRUE,
+  legend.pos = "topright")
 }
 \arguments{
 \item{x}{a numeric vector; data.}
