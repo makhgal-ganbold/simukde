@@ -11,7 +11,7 @@ n <- 10
 
 ## tests ----------------------------------------------
 
-context("n parameter test")
+context("argument test: n")
 
 test_that(desc = "univariate distribution", code = {
 
@@ -38,11 +38,11 @@ test_that(desc = "multivariate distribution", code = {
 
 ## ----------------------------------------------------
 
-context("distr parameter test")
+context("argument test: distr")
 
 test_that(desc = "univariate distribution", code = {
 
-  for (distr in c("norm", "exp", "unif")) {
+  for (distr in c("norm", "exp", "unif", "gamma", "cauchy", "lnorm", "weibull")) {
     expect_silent(res <- simulate_kde(x = x, n = n, distr = distr))
     expect_is(res, "list")
     expect_length(object = res$random.values, n = n)
@@ -63,11 +63,11 @@ test_that(desc = "multivariate distribution", code = {
 
 ## ----------------------------------------------------
 
-context("const.only parameter test")
+context("argument test: const.only")
 
 test_that(desc = "univariate distribution", code = {
 
-  for (distr in c("norm", "exp", "unif")) {
+  for (distr in c("norm", "exp", "unif", "gamma", "cauchy", "lnorm", "weibull")) {
     expect_is(object = simulate_kde(x = x, distr = distr, const.only = TRUE), class = "numeric")
   }
   expect_is(object = simulate_kde(x = x, const.only = "TRUE"), class = "numeric")
@@ -91,7 +91,7 @@ test_that(desc = "multivariate distribution", code = {
 
 ## ----------------------------------------------------
 
-context("seed parameter test")
+context("argument test: seed")
 
 test_that(desc = "non-parallel computing", code = {
 
@@ -108,5 +108,30 @@ test_that(desc = "parallel computing", code = {
   expect_silent(res.1 <- simulate_kde(x = x, n = n, seed = 17, parallel = TRUE))
   expect_silent(res.2 <- simulate_kde(x = x, n = n, seed = 17, parallel = TRUE))
   expect_identical(res.1$random.values, res.2$random.values)
+
+})
+
+## ----------------------------------------------------
+
+context("data validation test")
+
+test_that(desc = "univariate positive distribution", code = {
+
+  for (distr in c("exp", "gamma", "lnorm", "weibull")) {
+    expect_error(object = simulate_kde(x = c(-1, x), distr = distr))
+  }
+
+})
+
+## ----------------------------------------------------
+
+context("additional tests")
+
+test_that(desc = "find_best_fit", code = {
+
+  set.seed(1)
+  x <- rweibull(n = 10000, shape = 2, scale = 1)
+  expect_silent(fit <- find_best_fit(x = x, positive = TRUE, plot = FALSE))
+  expect_identical(fit$distribution, "weibull")
 
 })

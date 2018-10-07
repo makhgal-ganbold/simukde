@@ -1,6 +1,10 @@
 #' @title Simulation with Kernel Density Estimation
 #' @description The simukde package provides a function which generates random values from a univariate and multivariate continuous distribution by using kernel density estimation based on a sample. The function uses the Accept-Reject method.
-#' @author MAKHGAL Ganbold, National University of Mongolia
+#' @references Duong (2017) <doi:10.18637/jss.v021.i07>, Christian P. Robert and George Casella (2010 ISBN:978-1-4419-1575-7) <doi:10.1007/978-1-4419-1576-4>.
+#' @author MAKHGAL Ganbold and BAYARBAATAR Amgalan, National University of Mongolia
+#' @note Funding: This package has been done within the framework of the project Statistics and Optimization Based Methods for Identification of Cancer-Activated Biological Processes (P2017-2519) supported by the Asia Research Center, Mongolia and Korea Foundation for Advanced Studies, Korea.
+#'
+#' The funders had no role in study design, analysis, decision to publish, or preparation of the package.
 #' @docType package
 #' @name simukde
 NULL

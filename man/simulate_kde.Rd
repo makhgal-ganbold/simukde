@@ -36,9 +36,15 @@ Following code named distributions can be used as a value of the argument \code{
 For univariate distributions:
 \describe{
 \item{norm}{normal distribution (default), \eqn{(-\infty,+\infty)}}
+\item{cauchy}{Cauchy distribution, \eqn{(-\infty,+\infty)}}
+\item{lnorm}{log-normal distribution, \eqn{(0,+\infty)}}
 \item{exp}{exponential distribution, \eqn{(0,+\infty)}}
+\item{gamma}{gamma distribution, \eqn{(0,+\infty)}}
+\item{weibull}{Weibull distribution, \eqn{(0,+\infty)}}
 \item{unif}{uniform distribution, \eqn{(a,b)}}
 }
+And you can choose the best fitting instrumental distribution to simulate random variables more effectively by using \code{\link{find_best_fit}}. See examples.
+
 For multivariate distributions, "norm" (multivariate normal distribution) is used.
 }
 \examples{
@@ -47,22 +53,32 @@ data(faithful)
 hist(faithful$eruptions)
 res <- simukde::simulate_kde(x = faithful$eruptions, n = 100, parallel = FALSE)
 hist(res$random.values)
-\dontshow{
-## 2-dimensional data
+
+## Simulation with the best fitting instrumental distribution
 data(faithful)
-res <- simukde::simulate_kde(x = faithful, n = 1, parallel = FALSE)
-plot(res$kde, display = "filled.contour2")
-points(x = res$random.values, cex = 0.5, pch = 16, col = "blue")
-points(x = faithful, cex = 0.25, pch = 16, col = "gray")
-}
+par(mfrow = c(1, 3))
+hist(faithful$eruptions)
+fit <- simukde::find_best_fit(x = faithful$eruptions, positive = TRUE)
+res <- simukde::simulate_kde(
+  x = faithful$eruptions, n = 100,
+  distr = fit$distribution, parallel = FALSE
+)
+hist(res$random.values)
+par(mfrow = c(1, 1))
 \donttest{
 ## 2-dimensional data
 data(faithful)
 res <- simukde::simulate_kde(x = faithful, n = 100)
 plot(res$kde, display = "filled.contour2")
 points(x = res$random.values, cex = 0.25, pch = 16, col = "green")
-points(x = faithful, cex = 0.25, pch = 16, col = "black")
-}
+points(x = faithful, cex = 0.25, pch = 16, col = "black")}
+\dontshow{
+## 2-dimensional data
+data(faithful)
+res <- simukde::simulate_kde(x = faithful, n = 1, parallel = FALSE)
+plot(res$kde, display = "filled.contour2")
+points(x = res$random.values, cex = 0.5, pch = 16, col = "blue")
+points(x = faithful, cex = 0.25, pch = 16, col = "gray")}
 }
 \references{
 \itemize{
@@ -71,5 +87,5 @@ points(x = faithful, cex = 0.25, pch = 16, col = "black")
 }
 }
 \seealso{
-\code{\link[ks]{kde}}
+\code{\link{find_best_fit}}, \code{\link[ks]{kde}}
 }
