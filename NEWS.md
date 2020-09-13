@@ -1,3 +1,8 @@
+# simukde 1.2.0
+
+* New arguments were added to the function `find_best_fit`, particularly, `dlc` and `dlw` which specify probability density line color and width.
+* Added ... (ellipsis) to the function `find_best_fit` for passing additional arguments to its internal function `hist`.
+
 # simukde 1.1.0
 
 * Added a `NEWS.md` file to track changes to the package.

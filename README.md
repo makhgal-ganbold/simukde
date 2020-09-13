@@ -57,7 +57,10 @@ devtools::install_github("galaamn/simukde")
 
 ## Author
 
-[MAKHGAL Ganbold](http://galaa.mn/ "Galaa's Personal Page") and BAYARBAATAR Amgalan, National University of Mongolia, 2018
+[MAKHGAL Ganbold](https://www.galaa.mn/ "Galaa's Personal Page") and BAYARBAATAR Amgalan, National University of Mongolia
+## Copyright
+
+&copy; 2018 Makhgal Ganbold and BAYARBAATAR Amgalan
 
 ## Acknowledgment
 

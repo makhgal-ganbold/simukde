@@ -4,8 +4,15 @@
 \alias{simulate_kde}
 \title{Simulation with Kernel Density Estimation}
 \usage{
-simulate_kde(x, n = 100, distr = "norm", const.only = FALSE,
-  seed = NULL, parallel = FALSE, ...)
+simulate_kde(
+  x,
+  n = 100,
+  distr = "norm",
+  const.only = FALSE,
+  seed = NULL,
+  parallel = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric vector, matrix or data frame; data.}

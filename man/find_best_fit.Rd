@@ -2,10 +2,17 @@
 % Please edit documentation in R/functions.R
 \name{find_best_fit}
 \alias{find_best_fit}
-\title{Find Best Fitting Distribution}
+\title{Find The Best Fitting Distribution}
 \usage{
-find_best_fit(x, positive = FALSE, plot = TRUE,
-  legend.pos = "topright")
+find_best_fit(
+  x,
+  positive = FALSE,
+  plot = TRUE,
+  legend.pos = "topright",
+  dlc = NULL,
+  dlw = 1,
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric vector; data.}
@@ -15,6 +22,12 @@ find_best_fit(x, positive = FALSE, plot = TRUE,
 \item{plot}{a logical constant. If \code{TRUE} (default), a histogram and density lines are drawn.}
 
 \item{legend.pos}{a character string. Indicates the legend position and must be one of "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright" (default), "right" and "center".}
+
+\item{dlc}{a vector; probability density line colors for supported (up to 7) distributions. If unspecified, the rainbow color palette will be used.}
+
+\item{dlw}{a numerical constant; probability density line width.}
+
+\item{...}{Further arguments and parameters for the function \code{\link[graphics]{hist}}, particularly, main title and axis labels. However, the parameter \code{freq} is not able to override.}
 }
 \value{
 A list containing the following items:

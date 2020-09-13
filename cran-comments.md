@@ -1,16 +1,23 @@
 
+## Resubmission
+
+This is resubmission. The reviewer tell us to change a URL in the file README.md which is redirected to the other address with SSL and www.
+Now the URL http://galaa.mn/ is changed to https://www.galaa.mn/.
+
 ## Test environments
 
-* local ubuntu 18.04, R 3.5.1
-* win-builder (devel and release)
+* Ubuntu 20.04, R 3.6.3 (local machine)
+* r-hub
+* win-builder (devel, oldrelease and release)
 
 ## R CMD check results
 
-There were no ERRORs, WARNINGs or NOTEs when we checked with the function devtools::check().
+There were no ERRORs or WARNINGs. The only one NOTE was detected for "checking for future file timestamps" on r-hub and its message was "unable to verify current time". However, there was no NOTE for R-devel on Fedora.
 
-But there was TWO NOTE at Maintainer in DESCRIPTION file and at testing the package when we used the function devtools::release(). However such line of DESCRIPTION file is looking properly. For second note, the command `R CMD check` was executed with parameters `--run-donttest --as-cran`. So the example in the enviroment `donttest` was run and it consumed some time which is approximately 90 seconds. In the first submission of the package, such example was wrapped by `dontrun`. But a CRAN member, who reviewed the submission, wrote "don't wrap by `dontrun`". So we wrapped it by `donttest` and it was accepted by CRAN. For this submission, we didn't change the example.
+For win-builder, one NOTE was detected for the maintainer address on R-devel only. However, it seems to be fine.
+
+Also, the example in the enviroment `donttest` consumes long time which is approximately 90 seconds. In the first submission of the package, such example was wrapped by `dontrun`. But a CRAN member, who reviewed the submission, wrote "don't wrap by `dontrun`". So we wrapped it by `donttest` and it was accepted by CRAN. For second submission, we didn't change the example.
 
 ## Downstream dependencies
 
-There are currently no downstream dependencies for this package.
-Reverse dependencies were checked by the function devtools::use_revdep() and no errors or warnings found.
+There are currently no downstream dependencies for this package. Reverse dependencies were checked by the function `tools::package_dependencies()`.
