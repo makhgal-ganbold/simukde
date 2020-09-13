@@ -35,7 +35,7 @@ par(mfrow = c(1, 1))
 ## 2-dimensional data
 data(faithful)
 res <- simukde::simulate_kde(x = faithful, n = 100)
-plot(res$kde, display = "filled.contour2")
+plot(res$kde, display = "filled.contour")
 points(x = res$random.values, cex = 0.25, pch = 16, col = "green")
 points(x = faithful, cex = 0.25, pch = 16, col = "black")
 ```
@@ -57,7 +57,10 @@ devtools::install_github("galaamn/simukde")
 
 ## Author
 
-[MAKHGAL Ganbold](http://galaa.mn/ "Galaa's Personal Page") and BAYARBAATAR Amgalan, National University of Mongolia, 2018
+[MAKHGAL Ganbold](https://www.galaa.mn/ "Galaa's Personal Page") and BAYARBAATAR Amgalan, National University of Mongolia
+## Copyright
+
+&copy; 2018 Makhgal Ganbold and BAYARBAATAR Amgalan
 
 ## Acknowledgment
 

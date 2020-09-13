@@ -170,14 +170,14 @@ data_validation <- function (x, distr) {
 #' ## 2-dimensional data
 #' data(faithful)
 #' res <- simukde::simulate_kde(x = faithful, n = 100)
-#' plot(res$kde, display = "filled.contour2")
+#' plot(res$kde, display = "filled.contour")
 #' points(x = res$random.values, cex = 0.25, pch = 16, col = "green")
 #' points(x = faithful, cex = 0.25, pch = 16, col = "black")}
 #' \dontshow{
 #' ## 2-dimensional data
 #' data(faithful)
 #' res <- simukde::simulate_kde(x = faithful, n = 1, parallel = FALSE)
-#' plot(res$kde, display = "filled.contour2")
+#' plot(res$kde, display = "filled.contour")
 #' points(x = res$random.values, cex = 0.5, pch = 16, col = "blue")
 #' points(x = faithful, cex = 0.25, pch = 16, col = "gray")}
 
@@ -317,7 +317,7 @@ simulate_kde <- function (x, n = 100, distr = "norm", const.only = FALSE, seed =
 
 }
 
-#' @title Find Best Fitting Distribution
+#' @title Find The Best Fitting Distribution
 #'
 #' @description It finds the best fitting distribution from supported univariate continuous distributions for given data.
 #'
@@ -325,6 +325,9 @@ simulate_kde <- function (x, n = 100, distr = "norm", const.only = FALSE, seed =
 #' @param positive a logical constant; distribution type.
 #' @param plot a logical constant. If \code{TRUE} (default), a histogram and density lines are drawn.
 #' @param legend.pos a character string. Indicates the legend position and must be one of "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright" (default), "right" and "center".
+#' @param dlc a vector; probability density line colors for supported (up to 7) distributions. If unspecified, the rainbow color palette will be used.
+#' @param dlw a numerical constant; probability density line width.
+#' @param ... Further arguments and parameters for the function \code{\link[graphics]{hist}}, particularly, main title and axis labels. However, the parameter \code{freq} is not able to override.
 #'
 #' @return A list containing the following items:
 #' \describe{
@@ -358,7 +361,7 @@ simulate_kde <- function (x, n = 100, distr = "norm", const.only = FALSE, seed =
 #' petal.length <- datasets::iris$Petal.Length[datasets::iris$Species == "setosa"]
 #' simukde::find_best_fit(x = petal.length, positive = TRUE)
 
-find_best_fit <- function (x, positive = FALSE, plot = TRUE, legend.pos = "topright") {
+find_best_fit <- function (x, positive = FALSE, plot = TRUE, legend.pos = "topright", dlc = NULL, dlw = 1, ...) {
 
   # Input validation
   if (!is.vector(x)) {
@@ -376,7 +379,7 @@ find_best_fit <- function (x, positive = FALSE, plot = TRUE, legend.pos = "topri
   }
   # Sample size
   n <- length(x)
-  # Aviod from ties
+  # Avoid from ties
   if (any(table(x) > 1)) {
     x.ks <- x + stats::rnorm(n = n, sd = min(1e-6, stats::sd(x) / 1000000))
   } else {
@@ -464,18 +467,29 @@ find_best_fit <- function (x, positive = FALSE, plot = TRUE, legend.pos = "topri
   S <- S[distr.order,]
   if (isTRUE(plot)) {
     # Histogram
-    ylim <- max(graphics::hist(x = x, plot = FALSE)$density, simplify2array(p.d.f))
-    xname <- deparse(substitute(x))
-    graphics::hist(x = x, freq = FALSE, ylim = c(0, ylim), xlab = xname, main = paste("Histogram of" , xname))
-    # Density line color
-    color <- grDevices::rainbow(n = 7)
+    ellipsis <- list(...)
+    ellipsis$freq <- FALSE
+    if (!methods::hasArg("ylim")) {
+      ellipsis$ylim <- c(0, max(graphics::hist(x = x, plot = FALSE)$density, simplify2array(p.d.f)))
+    }
+    if (!methods::hasArg("xlab")) {
+      ellipsis$xlab <- deparse(substitute(x))
+    }
+    xname <- ellipsis$xlab
+    if (!methods::hasArg("main")) {
+      ellipsis$main <- paste("Histogram of" , xname)
+    }
+    do.call(what = graphics::hist, args = c(list(x), ellipsis))
     # Density lines
     k <- length(p.d.f)
+    if (is.null(dlc) || length(dlc) < k) {
+      dlc <- grDevices::rainbow(n = 7)
+    }
     p.d.f <- p.d.f[distr.order]
     for (i in 1:k) {
-      graphics::lines(x = p.d.f.args, y = p.d.f[[i]], type = "l", col = color[i], lty = i)
+      graphics::lines(x = p.d.f.args, y = p.d.f[[i]], type = "l", col = dlc[i], lty = i, lwd = dlw)
     }
-    graphics::legend(x = legend.pos, legend = names(p.d.f), col = color[1:k], lty = 1:k)
+    graphics::legend(x = legend.pos, legend = names(p.d.f), col = dlc[1:k], lty = 1:k)
   }
   list(
     "distribution" = S$distribution[1],

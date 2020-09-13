@@ -4,8 +4,15 @@
 \alias{simulate_kde}
 \title{Simulation with Kernel Density Estimation}
 \usage{
-simulate_kde(x, n = 100, distr = "norm", const.only = FALSE,
-  seed = NULL, parallel = FALSE, ...)
+simulate_kde(
+  x,
+  n = 100,
+  distr = "norm",
+  const.only = FALSE,
+  seed = NULL,
+  parallel = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric vector, matrix or data frame; data.}
@@ -69,14 +76,14 @@ par(mfrow = c(1, 1))
 ## 2-dimensional data
 data(faithful)
 res <- simukde::simulate_kde(x = faithful, n = 100)
-plot(res$kde, display = "filled.contour2")
+plot(res$kde, display = "filled.contour")
 points(x = res$random.values, cex = 0.25, pch = 16, col = "green")
 points(x = faithful, cex = 0.25, pch = 16, col = "black")}
 \dontshow{
 ## 2-dimensional data
 data(faithful)
 res <- simukde::simulate_kde(x = faithful, n = 1, parallel = FALSE)
-plot(res$kde, display = "filled.contour2")
+plot(res$kde, display = "filled.contour")
 points(x = res$random.values, cex = 0.5, pch = 16, col = "blue")
 points(x = faithful, cex = 0.25, pch = 16, col = "gray")}
 }
